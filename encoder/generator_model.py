@@ -10,7 +10,7 @@ def create_stub(name, batch_size):
 
 def create_variable_for_generator(name, batch_size):
     return tf.get_variable('learnable_dlatents',
-                           shape=(batch_size, 18, 512),
+                           shape=(batch_size, 14, 512),
                            dtype='float32',
                            initializer=tf.initializers.random_normal())
 
@@ -19,7 +19,7 @@ class Generator:
     def __init__(self, model, batch_size, randomize_noise=False):
         self.batch_size = batch_size
 
-        self.initial_dlatents = np.zeros((self.batch_size, 18, 512))
+        self.initial_dlatents = np.zeros((self.batch_size, 14, 512))
         model.components.synthesis.run(self.initial_dlatents,
                                        randomize_noise=randomize_noise, minibatch_size=self.batch_size,
                                        custom_inputs=[partial(create_variable_for_generator, batch_size=batch_size),
@@ -40,7 +40,7 @@ class Generator:
         self.set_dlatents(self.initial_dlatents)
 
     def set_dlatents(self, dlatents):
-        assert (dlatents.shape == (self.batch_size, 18, 512))
+        assert (dlatents.shape == (self.batch_size, 14, 512))
         self.sess.run(tf.assign(self.dlatent_variable, dlatents))
 
     def get_dlatents(self):
